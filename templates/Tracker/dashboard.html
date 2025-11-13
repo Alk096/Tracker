@@ -1,0 +1,68 @@
+{% extends 'Tracker/base_dashboard.html' %}
+
+{% block content %}
+<div class="accordion" id="accordionDirections">
+  {% for direction, projets in projets_groupes.items %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+      <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+              type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse{{ forloop.counter }}"
+              aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="collapse{{ forloop.counter }}">
+        <span class="badge badge-sm bg-gradient-custom" style="margin-right: 10px;">{{ projets|length }}</span>{{ direction }}
+      </button>
+    </h2>
+    <div id="collapse{{ forloop.counter }}"
+         class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+         aria-labelledby="heading{{ forloop.counter }}"
+         data-bs-parent="#accordionDirections">
+      <div class="accordion-body">
+
+        <!-- Tableau des projets -->
+        <div class="table-responsive p-0">
+          <table class="table align-items-center justify-content-center mb-0">
+            <thead>
+              <tr>
+                <th>Actions</th>
+                <th>Projet</th>
+                <th>Début</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for projet in projets %}
+              <tr>
+                <td>
+                  <a class="btn btn-icon btn-custom" type="button" href="{% url 'projet_details' projet.id %}">
+                      <span class="btn-inner--icon"><i class="material-symbols-rounded">visibility</i></span>
+                  </a>
+                </td>
+                <td>{{ projet.intitule }}</td>
+                <td>{{ projet.date_debut }}</td>
+                <td>{{ projet.date_fin }}</td>
+                <td>
+                  {% if projet.statut %}
+                    <span class="badge badge-sm bg-gradient-secondary">Terminé</span>
+                  {% else %}
+                    <span class="badge badge-sm bg-gradient-info">En cours</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-center text-muted">
+                  Aucun projet pour cette direction
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

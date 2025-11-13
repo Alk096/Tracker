@@ -1,0 +1,66 @@
+{% extends 'Tracker/base_dashboard.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+  <body>
+  <div class="container-fluid py-2">
+    <div class="row ">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
+                <h5 class="text-white text-capitalize ps-3 mb-0">Prestations du projet : {{mon_projet.intitule}}</h5>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2" >
+              <form role="form" action="" method="POST" style="padding : 30px 30px 30px 30px;">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group input-group-outline mb-3">
+                              {% render_field form.designation class="form-control" placeholder="Désignation de la prestation" %}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="input-group input-group-outline mb-3">
+                            {% render_field form.charge class="form-control" placeholder="Désignation de la prestation" %}
+                          </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                          <label>Date de fin estimée :</label>
+                          <div class="input-group input-group-outline mb-3">
+                            {% render_field form.date_fin class="form-control" type="date" %}
+                          </div>
+                      </div>
+                  </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group input-group-outline mb-3">
+                              {% render_field form.description class="form-control" placeholder="Description de la prestation" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                     <div class="d-flex justify-content-between">
+                        <button type="submit" name="save_add" class="btn btn-lg bg-gradient-success w-50  mt-4 mb-0 me-2">
+                          Ajouter une autre
+                        </button>
+                        <button type="submit" name="save_quit" class="btn btn-lg btn-outline-success w-50 mt-4 mb-0 ms-2">
+                          Ajouter et quitter
+                        </button>
+                      </div>
+                    </div>
+              </form>
+            </div>
+          </div>
+      </div>
+
+    </div>
+    </div>
+  </body>
+
+{% endblock %}

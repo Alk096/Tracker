@@ -1,0 +1,520 @@
+{% extends 'Tracker/base_dashboard.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="container-fluid py-2">
+    <div class="row">
+      <div class="ms-3">
+        <h3 class="mb-0 h4 font-weight-bolder">Tableau de bord</h3>
+        <p class="mb-4">
+          Suivez l'évolution des projets Iman.
+        </p>
+      </div>
+      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card">
+          <div class="card-header p-2 ps-3">
+            <div class="d-flex justify-content-between">
+              <div>
+                <p class="text-sm mb-0 text-capitalize">Projets en cours</p>
+                <h4 class="mb-0">{{n_palive}}</h4>
+              </div>
+              <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                <i class="material-symbols-rounded opacity-10">weekend</i>
+              </div>
+            </div>
+          </div>
+          <hr class="dark horizontal my-0">
+          <div class="card-footer p-2 ps-3">
+            <p class="mb-0 text-sm"><span class="font-weight-bolder {% if p_projet > 0 %}text-success{% else %}text-danger{% endif %}">{% if p_projet > 0 %}+{% endif %} {{p_projet}} %</span>par rapport au mois dernier</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card">
+          <div class="card-header p-2 ps-3">
+            <div class="d-flex justify-content-between">
+              <div>
+                <p class="text-sm mb-0 text-capitalize">Projets terminés</p>
+                <h4 class="mb-0">{{n_pended}}</h4>
+              </div>
+              <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                <i class="material-symbols-rounded opacity-10">person</i>
+              </div>
+            </div>
+          </div>
+          <hr class="dark horizontal my-0">
+          <div class="card-footer p-2 ps-3">
+            <p class="mb-0 text-sm"><span class="font-weight-bolder {% if p_projet_termine > 0 %}text-success{% else %}text-danger{% endif %}">{% if p_projet_termine > 0 %}+{% endif %} {{p_projet_termine}} %</span>par rapport au mois dernier</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card">
+          <div class="card-header p-2 ps-3">
+            <div class="d-flex justify-content-between">
+              <div>
+                <p class="text-sm mb-0">Tâches en cours</p>
+                <h4 class="mb-0">{{n_presta}}</h4>
+              </div>
+              <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                <i class="material-symbols-rounded opacity-10">leaderboard</i>
+              </div>
+            </div>
+          </div>
+          <hr class="dark horizontal my-0">
+          <div class="card-footer p-2 ps-3">
+            <p class="mb-0 text-sm"><span class="font-weight-bolder {% if p_talive > 0 %}text-success{% else %}text-danger{% endif %}">{% if p_talive > 0 %}+{% endif %} {{p_talive}} %</span>par rapport au mois dernier</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6">
+        <div class="card">
+          <div class="card-header p-2 ps-3">
+            <div class="d-flex justify-content-between">
+              <div>
+                <p class="text-sm mb-0 text-capitalize">Rapports</p>
+                <h4 class="mb-0">{{n_rapport}}</h4>
+              </div>
+              <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-lg">
+                <i class="material-symbols-rounded opacity-10">weekend</i>
+              </div>
+            </div>
+          </div>
+          <hr class="dark horizontal my-0">
+          <div class="card-footer p-2 ps-3">
+            <p class="mb-0 text-sm"><span class="font-weight-bolder {% if p_rapport > 0 %}text-success{% else %}text-danger{% endif %}"></span>-<br>-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mt-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h6 class="mb-0 ">Tâches journalières</h6>
+            <div class="pe-2">
+              <div class="chart">
+                <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
+              </div>
+            </div>
+            <hr class="dark horizontal">
+            <div class="d-flex ">
+              <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+              <p class="mb-0 text-sm"> - </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mt-4 mb-4">
+        <div class="card ">
+          <div class="card-body">
+            <h6 class="mb-0 "> Projets</h6>
+            <div class="pe-2">
+              <div class="chart">
+                <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
+              </div>
+            </div>
+            <hr class="dark horizontal">
+            <div class="d-flex ">
+              <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+              <p class="mb-0 text-sm"> - </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mt-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h6 class="mb-0 ">Tâches complétées</h6>
+            <div class="pe-2">
+              <div class="chart">
+                <canvas id="chart-line-tasks" class="chart-canvas" height="170"></canvas>
+              </div>
+            </div>
+            <hr class="dark horizontal">
+            <div class="d-flex ">
+              <i class="material-symbols-rounded text-sm my-auto me-1">schedule</i>
+              <p class="mb-0 text-sm">-</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <div class="row">
+              <div class="col-lg-6 col-7">
+                <h6>Projets</h6>
+              </div>
+              <div class="col-lg-6 col-5 my-auto text-end">
+                <div class="dropdown float-lg-end pe-4">
+                  <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v text-secondary"></i>
+                  </a>
+                  <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
+                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
+                    <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="table-responsive">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Intitulé</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Client</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Pourcentage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for projet in projets %}
+                  <tr>
+                    <td>
+                      <a href="{% url 'projet_details' projet.id %}">
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{projet.intitule}}</h6>
+                          </div>
+                        </div>
+                      </a>
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                      <a href="{% url 'projet_details' projet.id %}">
+                        <span class="text-xs font-weight-bold">{{projet.client}}</span>
+                      </a>
+                    </td>
+                    <td class="align-middle">
+                      <a href="{% url 'projet_details' projet.id %}">
+                        <div class="progress-wrapper w-75 mx-auto">
+                          <div class="progress-info">
+                            <div class="progress-percentage">
+                              <span class="text-xs font-weight-bold">{{ projet.progression }}%</span>
+                            </div>
+                          </div>
+                          <div class="progress">
+                            <div class="progress-bar bg-gradient-info"
+                                 role="progressbar"
+                                 style="width: {{ projet.progression }}%;"
+                                 aria-valuenow="{{ projet.progression }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </a>
+                    </td>                    
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-lg-4 col-md-6">
+        <div class="card h-100">
+          <div class="card-header pb-0">
+            <h6>Classement des client</h6>
+            <p class="text-sm">
+              <i class="fa fa-arrow-up text-success" aria-hidden="true"></i>
+              <span class="font-weight-bold">24%</span> this month
+            </p>
+          </div>
+          <div class="card-body p-3">
+            <div class="timeline timeline-one-side">
+              <div class="timeline-block mb-3">
+                <span class="timeline-step">
+                  <i class="material-symbols-rounded text-success text-gradient">notifications</i>
+                </span>
+                <div class="timeline-content">
+                  <h6 class="text-dark text-sm font-weight-bold mb-0">$2400, Design changes</h6>
+                  <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">22 DEC 7:20 PM</p>
+                </div>
+              </div>
+              <div class="timeline-block mb-3">
+                <span class="timeline-step">
+                  <i class="material-symbols-rounded text-danger text-gradient">code</i>
+                </span>
+                <div class="timeline-content">
+                  <h6 class="text-dark text-sm font-weight-bold mb-0">New order #1832412</h6>
+                  <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">21 DEC 11 PM</p>
+                </div>
+              </div>
+              <div class="timeline-block mb-3">
+                <span class="timeline-step">
+                  <i class="material-symbols-rounded text-info text-gradient">shopping_cart</i>
+                </span>
+                <div class="timeline-content">
+                  <h6 class="text-dark text-sm font-weight-bold mb-0">Server payments for April</h6>
+                  <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">21 DEC 9:34 PM</p>
+                </div>
+              </div>
+              <div class="timeline-block mb-3">
+                <span class="timeline-step">
+                  <i class="material-symbols-rounded text-warning text-gradient">credit_card</i>
+                </span>
+                <div class="timeline-content">
+                  <h6 class="text-dark text-sm font-weight-bold mb-0">New card added for order #4395133</h6>
+                  <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">20 DEC 2:20 AM</p>
+                </div>
+              </div>
+              <div class="timeline-block mb-3">
+                <span class="timeline-step">
+                  <i class="material-symbols-rounded text-primary text-gradient">key</i>
+                </span>
+                <div class="timeline-content">
+                  <h6 class="text-dark text-sm font-weight-bold mb-0">Unlock packages for development</h6>
+                  <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">18 DEC 4:54 AM</p>
+                </div>
+              </div>
+              <div class="timeline-block">
+                <span class="timeline-step">
+                  <i class="material-symbols-rounded text-dark text-gradient">payments</i>
+                </span>
+                <div class="timeline-content">
+                  <h6 class="text-dark text-sm font-weight-bold mb-0">New order #9583120</h6>
+                  <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">17 DEC</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100">
+          <div class="card-header pb-0">
+            <h6>Classement des client</h6>
+          </div>
+          <div class="card-body p-3">
+            <div class="timeline timeline-one-side">
+              {% for client in client_top %}
+              <div class="timeline-block mb-3">
+                <span class="timeline-step">
+                  <i class="material-symbols-rounded text-warning text-gradient">{{ forloop.counter }}</i>
+                </span>
+                <div class="timeline-content">
+                  <h6 class="text-dark text-sm font-weight-bold mb-0">{{client.raison}} | {{client.mail}} |{{client.telephone}}</h6>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--   Core JS Files   -->
+  <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+  <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+  <script src="{% static 'assets/js/plugins/perfect-scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/js/plugins/smooth-scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/js/plugins/chartjs.min.js' %}"></script>
+  <script>
+    var ctx = document.getElementById("chart-bars").getContext("2d");
+      const tdatavalues = JSON.parse('{{ presta_jours_data_json|safe }}');
+
+      const tdatalabels = JSON.parse('{{ presta_jours_labels_json|safe }}');
+
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: tdatalabels,
+        datasets: [{
+          label: "Views",
+          tension: 0.4,
+          borderWidth: 0,
+          borderRadius: 4,
+          borderSkipped: false,
+          backgroundColor: "#43A047",
+          data: tdatavalues,
+          barThickness: 'flex'
+        }, ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [5, 5],
+              color: '#e5e5e5'
+            },
+            ticks: {
+              suggestedMin: 0,
+              suggestedMax: 500,
+              beginAtZero: true,
+              padding: 10,
+              font: {
+                size: 14,
+                lineHeight: 2
+              },
+              color: "#737373"
+            },
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+              borderDash: [5, 5]
+            },
+            ticks: {
+              display: true,
+              color: '#737373',
+              padding: 10,
+              font: {
+                size: 14,
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+
+
+  const ctx2 = document.getElementById("chart-line").getContext("2d");
+
+  const plabels = JSON.parse('{{ projet_labels_json|safe }}');
+  const pdataValues = JSON.parse('{{ projet_data_json|safe }}');
+
+  new Chart(ctx2, {
+    type: "line",
+    data: {
+      labels: plabels,
+      datasets: [{
+        tension: 0.4,
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: "#43A047",
+        pointBorderColor: "transparent",
+        borderColor: "#43A047",
+        backgroundColor: "transparent",
+        fill: true,
+        data: pdataValues,
+        maxBarThickness: 6
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            title: function(context) {
+              return context[0].label;
+            }
+          }
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
+      scales: {
+        y: {
+          grid: {
+            drawBorder: false,
+            display: true,
+            borderDash: [4, 4],
+            color: '#e5e5e5'
+          },
+          ticks: {
+            color: '#737373',
+            padding: 10,
+            font: { size: 12, lineHeight: 2 }
+          }
+        },
+        x: {
+          grid: { display: false },
+          ticks: {
+            color: '#737373',
+            padding: 10,
+            font: { size: 12, lineHeight: 2 }
+          }
+        }
+      },
+    },
+  });
+
+
+  const ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
+
+  const prlabels = JSON.parse('{{ presta_labels_json|safe }}');
+  const prdataValues = JSON.parse('{{ presta_data_json|safe }}');
+
+  new Chart(ctx3, {
+    type: "line",
+    data: {
+      labels: prlabels,
+      datasets: [{
+        label: "Tâches terminées",
+        tension: 0.4,
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: "#43A047",
+        pointBorderColor: "transparent",
+        borderColor: "#43A047",
+        backgroundColor: "rgba(67, 160, 71, 0.1)",
+        fill: true,
+        data: prdataValues,
+        maxBarThickness: 6
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+      },
+      interaction: { intersect: false, mode: 'index' },
+      scales: {
+        y: {
+          grid: { color: '#e5e5e5', borderDash: [4, 4] },
+          ticks: { color: '#737373', font: { size: 14 } }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#737373', font: { size: 14 } }
+        }
+      }
+    },
+  });
+  </script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'Tracker/base_dashboard.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+  <body>
+  <div class="container-fluid py-2">
+    <div class="row ">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
+                <h5 class="text-white text-capitalize ps-3 mb-0">Liste des clients</h5>
+                <a class="btn btn-light me-3" href="{% url 'client_add' %}">+ Nouveau client</a>
+              </div>
+
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Actions</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Raison sociale</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">NIF</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Adresse</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Email</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Téléphone</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for c in clients %}
+                      <tr>
+                        <td>
+                          <a class="btn btn-icon btn-custom" type="button" href="#">
+                              <span class="btn-inner--icon"><i class="material-symbols-rounded">visibility</i></span>
+                          </a>
+                          <a class="btn btn-icon btn-2 btn-success" type="button" href="{% url 'gen_papi_qr' c.id %}">
+                              <span class="btn-inner--icon"><i class="material-symbols-rounded" style="margin-right:3px;">qr_code_2_add</i></span>PAPI
+                          </a>
+                          <a class="btn btn-icon btn-2 btn-custom" type="button" href="{% url 'client_update' c.id %}">
+                              <span class="btn-inner--icon"><i class="material-symbols-rounded">edit</i></span>
+                          </a>
+                          <button type="button" class="btn btn-icon btn-2 btn-warning" data-bs-toggle="modal" data-bs-target="#modal-notification{{c.id}}">
+                            <span class="btn-inner--icon"><i class="material-symbols-rounded">delete</i></span>
+                          </button>
+                          <div class="modal fade" id="modal-notification{{c.id}}" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                            <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h6 class="modal-title font-weight-normal" id="modal-title-notification">Message</h6>
+                                  <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="py-3 text-center">
+                                    <i class="material-symbols-rounded text-danger" style="font-size: 80px">
+                                      notifications_active
+                                    </i>
+                                    <h4 class="text-gradient text-danger mt-4">Attention !</h4>
+                                    <p>Vous êtes sur le point de supprimer définitivement un élément.</p>
+                                  </div>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                  <a type="button" class="btn btn-icon btn-2 btn-danger" href="{% url 'client_supp' c.id %}">Confirmer la suppression</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <h6 class="text-secondary mb-0">{{c.raison}}</h6>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-secondary mb-0">{{c.nif}}</p>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-secondary mb-0">{{c.adresse}}</p>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-secondary mb-0">{{c.mail}}</p>
+                        </td>
+                        <td class="text-center">
+                          <span class="text-secondary mb-0">{{c.telephone}}</span>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+{% endblock %}

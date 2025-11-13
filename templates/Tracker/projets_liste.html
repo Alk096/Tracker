@@ -1,0 +1,116 @@
+{% extends 'Tracker/base_dashboard.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+  <body>
+  <div class="container-fluid py-2">
+    <div class="row ">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
+                <h5 class="text-white text-capitalize ps-3 mb-0">Liste des projets</h5>
+                <a class="btn btn-light me-3" href="{% url 'projet_add' %}">+ Nouveau projet</a>
+              </div>
+
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Actions</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Client</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Intitulé</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Direction en charge</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Période</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for p in projets %}
+                      <tr>
+                        <td>
+                          <a class="btn btn-icon btn-custom" type="button" href="{% url 'projet_details' p.id %}">
+                              <span class="btn-inner--icon"><i class="material-symbols-rounded">visibility</i></span>
+                          </a>
+                          {% if p.statut == False %}
+                            {% if p.utilisateur == request.user.utilisateur %}
+                              <a class="btn btn-icon btn-2 btn-custom" type="button" href="{% url 'projet_update' p.id %}">
+                                  <span class="btn-inner--icon"><i class="material-symbols-rounded">edit</i></span>
+                              </a>
+
+                              <a class="btn btn-icon btn-2 btn-success" type="button" href="{% url 'projet_end' p.id %}">
+                                  <span class="btn-inner--icon"><i class="material-symbols-rounded">check</i></span>
+                              </a>
+
+
+                              <button type="button" class="btn btn-icon btn-2 btn-warning" data-bs-toggle="modal" data-bs-target="#modal-notification{{p.id}}">
+                                <span class="btn-inner--icon"><i class="material-symbols-rounded">delete</i></span>
+                              </button>
+                            {% endif %}
+                          {% else %}
+                            <!--
+                              <a class="btn btn-icon btn-2 btn-success" type="button" href="{% url 'gen_qr' p.id %}">
+                                  <span class="btn-inner--icon"><i class="material-symbols-rounded">qr_code_2_add</i></span>
+                              </a>
+                              -->
+                          {% endif %}
+                          <div class="modal fade" id="modal-notification{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                            <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h6 class="modal-title font-weight-normal" id="modal-title-notification">Message</h6>
+                                  <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="py-3 text-center">
+                                    <i class="material-symbols-rounded text-danger" style="font-size: 80px">
+                                      notifications_active
+                                    </i>
+                                    <h4 class="text-gradient text-danger mt-4">Attention !</h4>
+                                    <p>Vous êtes sur le point de supprimer définitivement un élément.</p>
+                                  </div>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                  <a type="button" class="btn btn-icon btn-2 btn-danger" href="{% url 'projet_supp' p.id %}">Confirmer la suppression</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <h6 class="text-secondary mb-0">{{p.client.raison}}</h6>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-secondary mb-0">{{p.intitule}}</p>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-secondary mb-0">{{p.direction}}</p>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-secondary mb-0">du {{p.date_debut}}</p>
+                        </td>
+                        <td class="text-center">
+                          {% if p.statut %}
+                            <span class="badge badge-sm bg-gradient-success">Terminé</span>
+                          {% else %}
+                            <span class="badge badge-sm bg-gradient-info">En cours</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+{% endblock %}

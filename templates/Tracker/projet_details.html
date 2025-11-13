@@ -1,0 +1,194 @@
+{% extends 'Tracker/base_dashboard.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+  <body>
+  <div class="container-fluid py-2">
+    <div class="row ">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
+                <h5 class="text-white text-capitalize ps-3 mb-0">Détails du projet {{mon_projet.intitule}}</h5>
+                {% if mon_projet.statut == False %}
+                  <div>
+                    <a class="btn btn-light me-3" href="{% url 'prestations_add' mon_projet.id %}">+ Nouvelle prestation</a>
+                    <!--
+                    <a class="btn btn-light me-3" href="{% url 'prestations_add' mon_projet.id %}"><i class="material-symbols-rounded">note_add</i></a>
+                    -->
+                  </div>
+                {% else %}
+                  <a class="btn btn-icon btn-2 btn-custom me-3" type="button" href="{% url 'down_qr' mon_projet.id %}">
+                      <span class="btn-inner--icon"><i class="material-symbols-rounded">qr_code</i></span>
+                  </a>
+                {% endif %}
+              </div>
+
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      {% if mon_projet.statut == False %}
+                        <th class="text-dark font-weight-bolder opacity-7">Actions</th>
+                      {% endif %}
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Désignation</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Description</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for p in prestations %}
+                      <tr>
+                        {% if mon_projet.statut == False %}
+                          <td>
+                            {% if p.statut == False %}
+                              <a class="btn btn-icon btn-2 btn-custom" type="button" href="{% url 'prestation_update' p.id %}">
+                                  <span class="btn-inner--icon"><i class="material-symbols-rounded">edit</i></span>
+                              </a>
+                              <a class="btn btn-icon btn-2 btn-success" type="button" href="{% url 'note_add' p.id %}">
+                                  <span class="btn-inner--icon"><i class="material-symbols-rounded">add_notes</i></span>
+                              </a>
+                              <a class="btn btn-icon btn-2 btn-success" type="button" href="{% url 'prestation_end' p.id %}">
+                                  <span class="btn-inner--icon"><i class="material-symbols-rounded">check</i></span>
+                              </a>
+                              <button type="button" class="btn btn-icon btn-2 btn-warning" data-bs-toggle="modal" data-bs-target="#modal-notification{{p.id}}">
+                                <span class="btn-inner--icon"><i class="material-symbols-rounded">delete</i></span>
+                              </button>
+                              <div class="modal fade" id="modal-notification{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                                <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h6 class="modal-title font-weight-normal" id="modal-title-notification">Message</h6>
+                                      <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <div class="py-3 text-center">
+                                        <i class="material-symbols-rounded text-danger" style="font-size: 80px">
+                                          notifications_active
+                                        </i>
+                                        <h4 class="text-gradient text-danger mt-4">Attention !</h4>
+                                        <p>Vous êtes sur le point de supprimer définitivement un élément.</p>
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-center">
+                                      <a type="button" class="btn btn-icon btn-2 btn-danger" href="{% url 'prestation_supp' p.id %}">Confirmer la suppression</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endif %}
+                          </td>
+                        {% endif %}  
+                        <td class="text-center">
+                          <h6 class="text-secondary mb-0">{{p.designation}}</h6>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-secondary mb-0">{{p.description}}</p>
+                        </td>
+                        <td class="text-center">
+                          {% if p.statut %}
+                            <span class="badge badge-sm bg-gradient-success">Terminé</span>
+                          {% else %}
+                            <span class="badge badge-sm bg-gradient-info">En cours</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    {% if notes %}
+
+      <div class="row ">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
+                <h5 class="text-white text-capitalize ps-3 mb-0">Commentaires</h5>
+              </div>
+
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      {% if mon_projet.statut == False %}
+                        <th class="text-dark font-weight-bolder opacity-7">Actions</th>
+                      {% endif %}
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Prestation</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Auteur</th>
+                      <th class="text-center text-dark font-weight-bolder opacity-7">Commentaire</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for n in notes %}
+                      <tr>
+                        {% if mon_projet.statut == False %}
+                          <td>
+                            {% if n.auteur == request.user.utilisateur %}
+                              <a class="btn btn-icon btn-2 btn-custom" type="button" href="{% url 'note_update' n.id %}">
+                                  <span class="btn-inner--icon"><i class="material-symbols-rounded">edit</i></span>
+                              </a>
+                        
+                              <button type="button" class="btn btn-icon btn-2 btn-warning" data-bs-toggle="modal" data-bs-target="#modal-notification{{n.id}}">
+                                <span class="btn-inner--icon"><i class="material-symbols-rounded">delete</i></span>
+                              </button>
+                              <div class="modal fade" id="modal-notification{{n.id}}" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                                <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h6 class="modal-title font-weight-normal" id="modal-title-notification">Message</h6>
+                                      <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <div class="py-3 text-center">
+                                        <i class="material-symbols-rounded text-danger" style="font-size: 80px">
+                                          notifications_active
+                                        </i>
+                                        <h4 class="text-gradient text-danger mt-4">Attention !</h4>
+                                        <p>Vous êtes sur le point de supprimer définitivement un élément.</p>
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-center">
+                                      <a type="button" class="btn btn-icon btn-2 btn-danger" href="{% url 'note_supp' n.id %}">Confirmer la suppression</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endif %}
+                          </td>
+                        {% endif %}  
+                        <td class="text-center">
+                          <h6 class="text-secondary mb-0">{{n.prestation.designation}}</h6>
+                        </td>
+                        <td class="text-center">
+                          <p class="text-secondary mb-0">{{n.auteur.user.first_name}}</p>
+                        </td>
+                        <td class="text-center">{{n.contenu}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  {% endif %}  
+  </div>
+</body>
+
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "Tracker/qbase_dashboard.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container justify-content-center mt-5 col-10">
+  <div class="card shadow-lg">
+    <div class="card-header bg-gradient-dark text-white">
+      <h5 class="text-white mb-0">Questionnaire de satisfaction client</h5>
+    </div>
+    <div class="card-body">
+      <form method="post" id="questionnaireForm">
+        {% csrf_token %}
+
+        <h4>Informations personnelles</h4><hr>
+          <div class="mb-3">
+            {% render_field form.nom class="form-control" placeholder="Votre nom & prénom" %}
+          </div>
+
+          <div class="mb-3">
+            {% render_field form.fonction class="form-control" placeholder="Votre fonction" %}
+          </div>
+
+          <div class="mb-3">
+            {% render_field form.telephone class="form-control" placeholder="Numéro de téléphone" %}
+          </div>
+
+
+        <!-- Q1 -->
+        <div class="mb-4">
+          <h6 class="mb-2">Question 1</h6>
+          <label>Est-ce votre première prestation avec l’agence IMAN ?</label>
+          {% for radio in form.r1 %}
+          <div class="form-check">
+            {{ radio.tag }}
+            <label class="form-check-label">{{ radio.choice_label }}</label>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Q2 -->
+        <div class="mb-4" id="q2_block">
+          <h6 class="mb-2">Question 2</h6>
+          <label>Quelles prestations avez-vous sollicitées ?</label>
+          {% for checkbox in form.r2 %}
+          <div class="form-check">
+            {{ checkbox.tag }}
+            <label class="form-check-label">{{ checkbox.choice_label }}</label>
+          </div>
+          {% endfor %}
+          {% render_field form.r2_autre class="form-control mt-2" placeholder="Si autre, précisez..." %}
+        </div>
+
+        <!-- Q3 -->
+        <div class="mb-4">
+          <h6 class="mb-2">Question 3</h6>
+          <label>La prestation a-t-elle été conforme à la commande ?</label>
+          {% for radio in form.r3 %}
+          <div class="form-check">
+            {{ radio.tag }}
+            <label class="form-check-label">{{ radio.choice_label }}</label>
+          </div>
+          {% endfor %}
+          {% render_field form.r3_non class="form-control mt-2" placeholder="Si non, précisez la/les raison(s)..." %}
+        </div>
+
+        <!-- Q4 -->
+        <div class="mb-4">
+          <h6 class="mb-2">Question 4</h6>
+          <label>Les éléments suivants ont-ils été respectés ?</label>
+          {% for checkbox in form.r4 %}
+          <div class="form-check">
+            {{ checkbox.tag }}
+            <label class="form-check-label">{{ checkbox.choice_label }}</label>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Q5 -->
+        <div class="mb-4">
+          <h6 class="mb-2">Question 5</h6>
+          <label>Êtes-vous satisfait de la prestation ?</label>
+          {% for radio in form.r5 %}
+          <div class="form-check">
+            {{ radio.tag }}
+            <label class="form-check-label">{{ radio.choice_label }}</label>
+          </div>
+          {% endfor %}
+          {% render_field form.r5_raison class="form-control mt-2" placeholder="Si non, précisez la/les raison(s)..." %}
+        </div>
+
+        <!-- Q6 -->
+        <div class="mb-4">
+          <h6 class="mb-2">Question 6</h6>
+          <label>Seriez-vous prêt à nous contacter pour d’autres prestations ?</label>
+          {% for radio in form.r6 %}
+          <div class="form-check">
+            {{ radio.tag }}
+            <label class="form-check-label">{{ radio.choice_label }}</label>
+          </div>
+          {% endfor %}
+          {% render_field form.r6_raison class="form-control mt-2" id="q6_raison" placeholder="Si non, précisez la/les raison(s)..." %}
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="mt-4 text-end">
+          <button type="submit" class="btn btn-success w-100">Soumettre</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--
+<script>
+// Q1 → si "Oui" alors masquer Q2
+document.querySelectorAll("input[name='r1']").forEach(radio => {
+  radio.addEventListener("change", () => {
+    const q2Block = document.getElementById("q2_block");
+    if (radio.value === "True") {
+      q2Block.classList.add("d-none");
+    } else {
+      q2Block.classList.remove("d-none");
+    }
+  });
+});
+
+// Q3 → si NON, afficher textarea
+document.querySelectorAll("input[name='r3']").forEach(radio => {
+  radio.addEventListener("change", () => {
+    document.getElementById("q3_non").classList.toggle("d-none", radio.value !== "False");
+  });
+});
+
+// Q5 → si NON, afficher textarea
+document.querySelectorAll("input[name='r5']").forEach(radio => {
+  radio.addEventListener("change", () => {
+    document.getElementById("q5_raison").classList.toggle("d-none", radio.value !== "False");
+  });
+});
+
+// Q6 → si NON, afficher textarea
+document.querySelectorAll("input[name='r6']").forEach(radio => {
+  radio.addEventListener("change", () => {
+    document.getElementById("q6_raison").classList.toggle("d-none", radio.value !== "False");
+  });
+});
+</script>-->
+{% endblock %}
