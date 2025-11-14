@@ -196,8 +196,7 @@ def dashboard2_view(request):
     for item in taches_journalier_terminer:
         jour_num = item['jour'] - 2
         presta_jours_labels.append(jours_fr[jour_num])
-        presta_jours_data.append(item['jour'])
-        
+        presta_jours_data.append(item['nombre'])
         
     prestations_terminees = (
         models.Prestation.objects
