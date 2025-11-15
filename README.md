@@ -44,6 +44,7 @@ Navigation possible vers :
 
 ## 📄 3.1. Liste des Clients — `clients`
 - Affiche les informations de tout les client
+  
 Fonctionnalités :
 - Ajouter un client
 - Modifier un client 
@@ -70,6 +71,7 @@ Action :
 
 ## 📄 4.1. Liste des Projets — `projets`
 - Afficher les informations des projets
+  
 Fonctionnalités :   
 - Ajouter un projet
 - Accès aux détails pour voir les prestation ( tâches lier au projet )
@@ -79,7 +81,7 @@ Fonctionnalités :
 
 ---
 
-## ➕ 4.2. Ajouter un Projet — `/projets/add/`
+## ➕ 4.2. Ajouter un Projet — `projets_add`
 
 Champs :
 - Selectionner le client
@@ -106,6 +108,7 @@ Contenu :
 
 ## 📄 5.1. Liste des Prestations — `prestations`
 - Voir toutes les prestations lier a un projet
+  
 Fonctionnalités :
 - Modifier
 - Supprimer  
@@ -114,6 +117,7 @@ Fonctionnalités :
 
 ## ➕ 5.2. Ajouter une Prestation — `prestations_add`
 - On peut ajouter auttant de prestation a un projet a la création, tout comme on peux le faire après la création du projet
+  
 Champs :
 - Désignation de la prestation
 - Département concerner
@@ -126,8 +130,14 @@ Champs :
 
 # ⚙️ 6. Rapport — `Rapport`
 
-- Modifier le profil  
-- 
+- Liste des tous les rapport
+
+Fonctionnalités :
+- Ajouter un rapport ( Soumetre un fichier depuis votre gestionnaire de fichier )
+- Modifier un rapport ( Ecrassé l'ancien fichier par un autre )
+- Télecharger le rapport
+- Supprimer le rapport
+
 
 ---
 
